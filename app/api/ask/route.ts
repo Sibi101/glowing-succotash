@@ -13,6 +13,11 @@ interface AskBody {
 }
 
 export async function POST(request: Request) {
+  const contentType = request.headers.get("content-type") ?? "";
+  if (!contentType.toLowerCase().includes("application/json")) {
+    return NextResponse.json<ApiError>({ error: "Content-Type must be application/json." }, { status: 415 });
+  }
+
   let body: AskBody;
 
   try {
@@ -51,6 +56,11 @@ export async function POST(request: Request) {
       process?: { env?: Record<string, string | undefined> };
     };
     const isProduction = runtime.process?.env?.NODE_ENV === "production";
+    console.error("POST /api/ask failed", {
+      mode,
+      queryLength: query.length,
+      error: String(error)
+    });
     const message = "Search provider failed. Please try again.";
 
     return NextResponse.json<ApiError>(
