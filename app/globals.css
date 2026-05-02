@@ -27,6 +27,7 @@ body {
 
 body {
   @apply bg-background text-foreground antialiased;
+  font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
   background-image: radial-gradient(circle at 20% -10%, rgba(59, 130, 246, 0.15), transparent 35%),
     radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.14), transparent 40%);
 }

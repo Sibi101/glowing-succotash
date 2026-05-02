@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 import { AnimatedBackground } from "@/components/animated-background";
 import { AnswerCard } from "@/components/answer-card";
@@ -10,13 +11,40 @@ import { SearchModeTabs } from "@/components/search-mode-tabs";
 import { SourceCard } from "@/components/source-card";
 import type { ApiError, AskResponse, SearchMode } from "@/types/search";
 
+type SearchPhase = "empty" | "loading" | "answer" | "error";
+
+function isAskResponse(value: unknown): value is AskResponse {
+  if (!value || typeof value !== "object") return false;
+
+  const maybe = value as AskResponse;
+  return typeof maybe.answer === "string" && Array.isArray(maybe.followUps) && Array.isArray(maybe.sources);
+}
+
+function isApiError(value: unknown): value is ApiError {
+  return !!value && typeof value === "object" && typeof (value as ApiError).error === "string";
+}
+
 export function SearchShell() {
   const [query, setQuery] = useState("");
   const [mode, setMode] = useState<SearchMode>("web");
-  const [phase, setPhase] = useState<"empty" | "loading" | "answer" | "error">("empty");
+  const [phase, setPhase] = useState<SearchPhase>("empty");
   const [result, setResult] = useState<AskResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [highlightedSourceId, setHighlightedSourceId] = useState<number | null>(null);
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  useEffect(() => {
+    if (phase !== "loading") {
+      setLoadingStep(0);
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      setLoadingStep((prev) => (prev + 1) % 3);
+    }, 900);
+
+    return () => window.clearInterval(interval);
+  }, [phase]);
 
   async function runSearch(nextQuery?: string) {
     const finalQuery = (nextQuery ?? query).trim();
@@ -45,8 +73,7 @@ export function SearchShell() {
       const payload: unknown = await response.json();
 
       if (!response.ok) {
-        const apiError = isApiError(payload);
-        throw new Error(apiError ? apiError.error : "Something went wrong while searching.");
+        throw new Error(isApiError(payload) ? payload.error : "Something went wrong while searching.");
       }
 
       if (!isAskResponse(payload)) {
@@ -60,22 +87,6 @@ export function SearchShell() {
       setErrorMessage(error instanceof Error ? error.message : "Something went wrong while searching.");
     }
   }
-
-
-function isAskResponse(value: unknown): value is AskResponse {
-  if (!value || typeof value !== "object") return false;
-
-  const maybe = value as AskResponse;
-  return (
-    typeof maybe.answer === "string" &&
-    Array.isArray(maybe.followUps) &&
-    Array.isArray(maybe.sources)
-  );
-}
-
-function isApiError(value: unknown): value is ApiError {
-  return !!value && typeof value === "object" && typeof (value as ApiError).error === "string";
-}
 
   return (
     <main className="relative min-h-screen overflow-hidden px-4 py-8 sm:px-8 sm:py-12">
@@ -103,8 +114,20 @@ function isApiError(value: unknown): value is ApiError {
 
         {phase === "loading" && (
           <section className="w-full space-y-4">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 backdrop-blur-xl sm:p-6">
-              <p className="text-sm text-cyan-200/90">Searching the web...</p>
+            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:p-7">
+              <p className="text-xs uppercase tracking-[0.22em] text-zinc-400">Live workflow</p>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={loadingStep}
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  transition={{ duration: 0.25 }}
+                  className="mt-3 text-xl font-medium text-cyan-100 sm:text-2xl"
+                >
+                  {loadingStep === 0 ? "Searching..." : loadingStep === 1 ? "Reading..." : "Generating..."}
+                </motion.p>
+              </AnimatePresence>
               <div className="mt-4 space-y-3">
                 <div className="h-4 w-4/5 animate-pulse rounded bg-white/10" />
                 <div className="h-4 w-full animate-pulse rounded bg-white/10" />
@@ -134,32 +157,46 @@ function isApiError(value: unknown): value is ApiError {
           </section>
         )}
 
-        {phase === "answer" && result && (
-          <section className="w-full space-y-4">
-            <AnswerCard
-              answer={result.answer}
-              availableSourceIds={result.sources.map((source) => source.id)}
-              followUps={result.followUps}
-              onFollowUpClick={(followUp) => void runSearch(followUp)}
-              onCitationClick={(sourceId) => {
-                setHighlightedSourceId(sourceId);
+        <AnimatePresence mode="wait">
+          {phase === "answer" && result && (
+            <motion.section
+              key="answer"
+              initial={{ opacity: 0, y: 14 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
+              className="w-full space-y-5"
+            >
+              <AnswerCard
+                answer={result.answer}
+                availableSourceIds={result.sources.map((source) => source.id)}
+                followUps={result.followUps}
+                onFollowUpClick={(followUp) => void runSearch(followUp)}
+                onCitationClick={(sourceId) => {
+                  setHighlightedSourceId(sourceId);
 
-                const element = document.getElementById(`source-${sourceId}`);
-                element?.scrollIntoView({ behavior: "smooth", block: "center" });
+                  const element = document.getElementById(`source-${sourceId}`);
+                  element?.scrollIntoView({ behavior: "smooth", block: "center" });
 
-                window.setTimeout(() => {
-                  setHighlightedSourceId((currentId) => (currentId === sourceId ? null : currentId));
-                }, 1800);
-              }}
-            />
+                  window.setTimeout(() => {
+                    setHighlightedSourceId((currentId) => (currentId === sourceId ? null : currentId));
+                  }, 1800);
+                }}
+              />
 
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {result.sources.map((source) => (
-                <SourceCard key={source.id} source={source} highlighted={source.id === highlightedSourceId} />
-              ))}
-            </div>
-          </section>
-        )}
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {result.sources.map((source, index) => (
+                  <SourceCard
+                    key={source.id}
+                    source={source}
+                    index={index}
+                    highlighted={source.id === highlightedSourceId}
+                  />
+                ))}
+              </div>
+            </motion.section>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   );

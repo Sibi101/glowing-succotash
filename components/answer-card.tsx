@@ -28,9 +28,9 @@ export function AnswerCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl sm:p-6"
+      className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur-xl sm:p-7"
     >
-      <p className="text-sm leading-7 text-zinc-100 sm:text-base">
+      <p className="text-[15px] leading-8 text-zinc-100 sm:text-[17px]">
         {segments.map((segment, index) => {
           if (segment.type === "text") {
             return <span key={`text-${index}`}>{segment.value}</span>;
@@ -58,7 +58,7 @@ export function AnswerCard({
         })}
       </p>
 
-      <div className="mt-6">
+      <div className="mt-8">
         <p className="text-xs uppercase tracking-wide text-zinc-400">Follow-up ideas</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {followUps.map((question) => (
