@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 210 20% 97%;
+  --foreground: 222 17% 21%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 17% 21%;
+  --primary: 197 55% 46%;
+  --primary-foreground: 0 0% 100%;
+  --muted: 210 20% 95%;
+  --muted-foreground: 215 14% 45%;
+  --border: 214 20% 88%;
+  --input: 214 20% 88%;
+  --ring: 197 55% 46%;
+}
+
+* {
+  @apply border-border;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+  font-family: "Libre Baskerville", Georgia, serif;
+  background-image: radial-gradient(circle at 18% 85%, rgba(212, 231, 238, 0.95), rgba(212, 231, 238, 0) 45%),
+    radial-gradient(circle at 44% 44%, rgba(29, 199, 228, 0.78), rgba(29, 199, 228, 0) 52%),
+    radial-gradient(circle at 84% 20%, rgba(8, 33, 77, 0.9), rgba(8, 33, 77, 0) 42%),
+    linear-gradient(140deg, #0b577f 0%, #10a7c6 48%, #046f96 78%, #0a2a59 100%);
+}
