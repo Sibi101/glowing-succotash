@@ -1,11 +1,4 @@
-import type { SearchMode, Source } from "@/types/search";
-
-const MODE_GUIDANCE: Record<SearchMode, string> = {
-  fast: "Prioritize the most directly relevant facts first and keep the answer compact.",
-  web: "Provide a balanced, general-purpose summary grounded in the supplied sources.",
-  news: "Emphasize timeliness and clearly attribute claims to the cited sources.",
-  research: "Provide a deeper synthesis with key nuances while remaining concise."
-};
+import type { Source } from "@/types/search";
 
 export const DEEPSEEK_SYSTEM_PROMPT = `You are a Perplexity-style answer engine.
 Rules:
@@ -17,7 +10,7 @@ Rules:
 6) Produce 2-4 follow-up questions.
 7) Return valid JSON only with shape: {"answer": string, "followUps": string[]}.`;
 
-export function buildDeepseekUserPrompt(query: string, sources: Source[], mode: SearchMode): string {
+export function buildDeepseekUserPrompt(query: string, sources: Source[]): string {
   const renderedSources = sources
     .map((source) => {
       return [
@@ -33,8 +26,7 @@ export function buildDeepseekUserPrompt(query: string, sources: Source[], mode: 
     .join("\n\n");
 
   return [
-    `Mode: ${mode}`,
-    `Mode guidance: ${MODE_GUIDANCE[mode]}`,
+    "Mode guidance: Provide a balanced, general-purpose summary grounded in the supplied sources.",
     `User query: ${query}`,
     "Sources:",
     renderedSources || "(No sources provided)",

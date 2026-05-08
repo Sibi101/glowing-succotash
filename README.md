@@ -1,11 +1,10 @@
 # Aether Search (Perplexity-Style AI Search)
 
-A premium AI search app built with:
+A Perplexity-style AI search app built with:
 
 - Next.js App Router
 - TypeScript
 - Tailwind CSS
-- shadcn/ui-style primitives
 - Framer Motion
 - Lucide React
 
@@ -14,7 +13,11 @@ The app uses:
 - **Tavily** for real-time web/news retrieval
 - **DeepSeek V4 Flash** for answer synthesis from retrieved sources
 
-## 1) Local Setup
+## Project Overview
+
+Aether Search accepts a user query, retrieves fresh web/news context with Tavily, and synthesizes a cited answer using DeepSeek V4 Flash. The frontend communicates only with the internal API route (`/api/ask`), while provider keys remain server-side.
+
+## Local Setup
 
 ### Prerequisites
 
@@ -48,7 +51,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## 2) Environment Variables
+## Environment Variables
 
 Required for runtime API calls:
 
@@ -61,7 +64,7 @@ Security notes:
 - Do **not** reference these keys in client components.
 - The frontend calls only `/api/ask`; provider calls happen server-side.
 
-## 3) Development Commands
+## Development Commands
 
 ```bash
 npm run dev        # start development server
@@ -71,13 +74,13 @@ npm run lint       # lint checks
 npm run typecheck  # TypeScript checks
 ```
 
-Recommended before committing:
+Recommended before deploying:
 
 ```bash
 npm run lint && npm run typecheck && npm run build
 ```
 
-## 4) Deployment (Vercel)
+## Deployment (Vercel)
 
 1. Push this repo to GitHub/GitLab/Bitbucket.
 2. Import the project in Vercel.
@@ -88,7 +91,7 @@ npm run lint && npm run typecheck && npm run build
 
 Vercel defaults for Next.js are sufficient (build command `npm run build`, output `.next`).
 
-### Post-deploy sanity checks
+### Post-deploy checks
 
 - Load homepage successfully.
 - Submit a query and verify `/api/ask` returns:
@@ -97,7 +100,7 @@ Vercel defaults for Next.js are sufficient (build command `npm run build`, outpu
   - `followUps`
 - Confirm no provider secrets appear in browser devtools/network payloads.
 
-## 5) Production Safety
+## Production Readiness Notes
 
 - `/api/ask` validates input and returns 400 for bad requests.
 - Provider failures return a clean 500 response.
@@ -107,6 +110,8 @@ Vercel defaults for Next.js are sufficient (build command `npm run build`, outpu
 
 ```text
 app/
+  layout.tsx
+  page.tsx
   api/ask/route.ts
 components/
 lib/

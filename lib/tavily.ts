@@ -1,46 +1,15 @@
 import "server-only";
 
-import type { SearchMode, Source } from "@/types/search";
+import type { Source } from "@/types/search";
 
 const TAVILY_SEARCH_URL = "https://api.tavily.com/search";
 
-type TavilyMode = {
-  searchDepth: "basic" | "advanced";
-  topic?: "general" | "news";
-  maxResults: number;
-  includeAnswer: boolean;
-  includeRawContent: boolean;
-};
-
-const MODE_CONFIG: Record<SearchMode, TavilyMode> = {
-  fast: {
-    searchDepth: "basic",
-    topic: "general",
-    maxResults: 4,
-    includeAnswer: false,
-    includeRawContent: false
-  },
-  web: {
-    searchDepth: "basic",
-    topic: "general",
-    maxResults: 6,
-    includeAnswer: true,
-    includeRawContent: false
-  },
-  news: {
-    searchDepth: "basic",
-    topic: "news",
-    maxResults: 8,
-    includeAnswer: true,
-    includeRawContent: false
-  },
-  research: {
-    searchDepth: "advanced",
-    topic: "general",
-    maxResults: 12,
-    includeAnswer: true,
-    includeRawContent: true
-  }
+const SEARCH_CONFIG = {
+  searchDepth: "basic" as const,
+  topic: "general" as const,
+  maxResults: 6,
+  includeAnswer: true,
+  includeRawContent: false
 };
 
 interface TavilyResultItem {
@@ -61,7 +30,7 @@ export interface TavilySearchResult {
   sources: Source[];
 }
 
-export async function searchTavily(query: string, mode: SearchMode): Promise<TavilySearchResult> {
+export async function searchTavily(query: string): Promise<TavilySearchResult> {
   if (!query.trim()) {
     throw new Error("searchTavily: query is required.");
   }
@@ -74,8 +43,6 @@ export async function searchTavily(query: string, mode: SearchMode): Promise<Tav
     throw new Error("searchTavily: missing TAVILY_API_KEY environment variable.");
   }
 
-  const config = MODE_CONFIG[mode];
-
   let response: Response;
   try {
     response = await fetch(TAVILY_SEARCH_URL, {
@@ -86,11 +53,11 @@ export async function searchTavily(query: string, mode: SearchMode): Promise<Tav
       body: JSON.stringify({
         api_key: apiKey,
         query,
-        topic: config.topic,
-        search_depth: config.searchDepth,
-        max_results: config.maxResults,
-        include_answer: config.includeAnswer,
-        include_raw_content: config.includeRawContent
+        topic: SEARCH_CONFIG.topic,
+        search_depth: SEARCH_CONFIG.searchDepth,
+        max_results: SEARCH_CONFIG.maxResults,
+        include_answer: SEARCH_CONFIG.includeAnswer,
+        include_raw_content: SEARCH_CONFIG.includeRawContent
       }),
       cache: "no-store"
     });

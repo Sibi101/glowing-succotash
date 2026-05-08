@@ -14,14 +14,14 @@ const examples = [
 export function ExampleQueries({ onPick }: ExampleQueriesProps) {
   return (
     <section className="w-full max-w-3xl">
-      <p className="mb-3 text-xs uppercase tracking-wide text-zinc-500">Try an example</p>
+      <p className="mb-3 text-xs uppercase tracking-wide text-white/85">Try an example</p>
       <div className="grid gap-2 sm:grid-cols-2">
         {examples.map((query) => (
           <button
             key={query}
             type="button"
             onClick={() => onPick(query)}
-            className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-3 text-left text-sm text-zinc-300 transition hover:border-cyan-200/30 hover:text-white"
+            className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-left text-sm text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
           >
             {query}
           </button>
