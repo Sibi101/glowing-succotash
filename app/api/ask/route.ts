@@ -2,14 +2,12 @@ import { NextResponse } from "next/server";
 
 import { generateAnswer } from "@/lib/deepseek";
 import { searchTavily } from "@/lib/tavily";
-import type { ApiError, AskResponse, SearchMode } from "@/types/search";
+import type { ApiError, AskResponse } from "@/types/search";
 
 const MAX_QUERY_LENGTH = 1000;
-const ALLOWED_MODES: SearchMode[] = ["web", "news", "research", "fast"];
 
 interface AskBody {
   query?: unknown;
-  mode?: unknown;
 }
 
 export async function POST(request: Request) {
@@ -27,8 +25,6 @@ export async function POST(request: Request) {
   }
 
   const query = typeof body.query === "string" ? body.query.trim() : "";
-  const mode = normalizeMode(body.mode);
-
   if (!query) {
     return NextResponse.json<ApiError>({ error: "Query is required." }, { status: 400 });
   }
@@ -41,8 +37,8 @@ export async function POST(request: Request) {
   }
 
   try {
-    const { sources } = await searchTavily(query, mode);
-    const { answer, followUps } = await generateAnswer(query, sources, mode);
+    const { sources } = await searchTavily(query);
+    const { answer, followUps } = await generateAnswer(query, sources);
 
     const response: AskResponse = {
       answer,
@@ -57,7 +53,6 @@ export async function POST(request: Request) {
     };
     const isProduction = runtime.process?.env?.NODE_ENV === "production";
     console.error("POST /api/ask failed", {
-      mode,
       queryLength: query.length,
       error: String(error)
     });
@@ -75,12 +70,4 @@ export async function POST(request: Request) {
 
 export async function GET() {
   return NextResponse.json<ApiError>({ error: "Method not allowed." }, { status: 405 });
-}
-
-function normalizeMode(mode: unknown): SearchMode {
-  if (typeof mode === "string" && ALLOWED_MODES.includes(mode as SearchMode)) {
-    return mode as SearchMode;
-  }
-
-  return "web";
 }

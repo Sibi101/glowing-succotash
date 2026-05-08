@@ -7,9 +7,21 @@ import { AnimatedBackground } from "@/components/animated-background";
 import { AnswerCard } from "@/components/answer-card";
 import { ExampleQueries } from "@/components/example-queries";
 import { SearchInput } from "@/components/search-input";
-import { SearchModeTabs } from "@/components/search-mode-tabs";
 import { SourceCard } from "@/components/source-card";
-import type { ApiError, AskResponse, SearchMode } from "@/types/search";
+import type { ApiError, AskResponse } from "@/types/search";
+
+type SearchPhase = "empty" | "loading" | "answer" | "error";
+
+function isAskResponse(value: unknown): value is AskResponse {
+  if (!value || typeof value !== "object") return false;
+
+  const maybe = value as AskResponse;
+  return typeof maybe.answer === "string" && Array.isArray(maybe.followUps) && Array.isArray(maybe.sources);
+}
+
+function isApiError(value: unknown): value is ApiError {
+  return !!value && typeof value === "object" && typeof (value as ApiError).error === "string";
+}
 
 type SearchPhase = "empty" | "loading" | "answer" | "error";
 
@@ -26,7 +38,6 @@ function isApiError(value: unknown): value is ApiError {
 
 export function SearchShell() {
   const [query, setQuery] = useState("");
-  const [mode, setMode] = useState<SearchMode>("web");
   const [phase, setPhase] = useState<SearchPhase>("empty");
   const [result, setResult] = useState<AskResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -65,8 +76,7 @@ export function SearchShell() {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          query: finalQuery,
-          mode
+          query: finalQuery
         })
       });
 
@@ -89,33 +99,32 @@ export function SearchShell() {
   }
 
   return (
-    <main className="relative min-h-screen overflow-hidden px-4 py-8 sm:px-8 sm:py-12">
+    <main className="relative min-h-screen overflow-hidden px-4 py-10 sm:px-8 sm:py-14">
       <AnimatedBackground />
 
-      <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-8 sm:gap-10">
-        <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-1.5 text-xs text-zinc-300 backdrop-blur-xl">
-          <span className="size-1.5 rounded-full bg-cyan-300" />
+      <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-10 sm:gap-12">
+        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs text-slate-500 shadow-sm">
+          <span className="size-1.5 rounded-full bg-sky-500/80" />
           Aether Search
         </div>
 
         <section className="space-y-4 text-center">
-          <h1 className="bg-gradient-to-b from-white via-zinc-200 to-zinc-500 bg-clip-text text-4xl font-semibold tracking-tight text-transparent sm:text-6xl">
+          <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
             Ask the internet anything
           </h1>
-          <p className="mx-auto max-w-2xl text-sm text-zinc-400 sm:text-base">
+          <p className="mx-auto max-w-2xl text-base leading-8 text-slate-600">
             Real-time AI search with fast synthesis, cited sources, and concise answers that feel like a premium research workflow.
           </p>
         </section>
 
         <SearchInput value={query} onChange={setQuery} onSubmit={() => void runSearch()} loading={phase === "loading"} />
-        <SearchModeTabs mode={mode} onModeChange={setMode} />
 
         {phase === "empty" && <ExampleQueries onPick={(example) => void runSearch(example)} />}
 
         {phase === "loading" && (
           <section className="w-full space-y-4">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl sm:p-7">
-              <p className="text-xs uppercase tracking-[0.22em] text-zinc-400">Live workflow</p>
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">Live workflow</p>
               <AnimatePresence mode="wait">
                 <motion.p
                   key={loadingStep}
@@ -123,21 +132,21 @@ export function SearchShell() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.25 }}
-                  className="mt-3 text-xl font-medium text-cyan-100 sm:text-2xl"
+                  className="mt-3 text-xl font-medium text-slate-900 sm:text-2xl"
                 >
                   {loadingStep === 0 ? "Searching..." : loadingStep === 1 ? "Reading..." : "Generating..."}
                 </motion.p>
               </AnimatePresence>
               <div className="mt-4 space-y-3">
-                <div className="h-4 w-4/5 animate-pulse rounded bg-white/10" />
-                <div className="h-4 w-full animate-pulse rounded bg-white/10" />
-                <div className="h-4 w-3/5 animate-pulse rounded bg-white/10" />
+                <div className="h-4 w-4/5 animate-pulse rounded bg-slate-200" />
+                <div className="h-4 w-full animate-pulse rounded bg-slate-200" />
+                <div className="h-4 w-3/5 animate-pulse rounded bg-slate-200" />
               </div>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {Array.from({ length: 3 }).map((_, index) => (
-                <div key={index} className="h-36 animate-pulse rounded-xl border border-white/10 bg-white/[0.03]" />
+                <div key={index} className="h-36 animate-pulse rounded-xl border border-slate-200 bg-white" />
               ))}
             </div>
           </section>
