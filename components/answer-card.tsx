@@ -28,9 +28,9 @@ export function AnswerCard({
       initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, ease: "easeOut" }}
-      className="rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur-xl sm:p-6"
+      className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
     >
-      <p className="text-sm leading-7 text-zinc-100 sm:text-base">
+      <p className="text-[15px] leading-8 text-slate-700 sm:text-[17px]">
         {segments.map((segment, index) => {
           if (segment.type === "text") {
             return <span key={`text-${index}`}>{segment.value}</span>;
@@ -46,8 +46,8 @@ export function AnswerCard({
               className={cn(
                 "mx-0.5 inline-flex items-center rounded-md border px-1.5 py-0.5 text-[11px] font-medium transition",
                 isValidSource
-                  ? "border-cyan-200/40 bg-cyan-400/10 text-cyan-100 hover:border-cyan-200/70 hover:bg-cyan-300/20"
-                  : "cursor-not-allowed border-white/15 bg-white/5 text-zinc-400"
+                  ? "border-sky-200 bg-sky-50 text-sky-700 hover:border-sky-300"
+                  : "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
               )}
               aria-label={isValidSource ? `Go to source ${segment.sourceId}` : `Source ${segment.sourceId} unavailable`}
               disabled={!isValidSource}
@@ -58,15 +58,15 @@ export function AnswerCard({
         })}
       </p>
 
-      <div className="mt-6">
-        <p className="text-xs uppercase tracking-wide text-zinc-400">Follow-up ideas</p>
+      <div className="mt-8">
+        <p className="text-xs uppercase tracking-wide text-slate-500">Follow-up ideas</p>
         <div className="mt-3 flex flex-wrap gap-2">
           {followUps.map((question) => (
             <button
               key={question}
               type="button"
               onClick={() => onFollowUpClick?.(question)}
-              className="rounded-lg border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-zinc-300 transition hover:border-cyan-200/30 hover:text-cyan-100"
+              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300 hover:bg-white hover:text-slate-900"
             >
               {question}
             </button>
