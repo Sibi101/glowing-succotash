@@ -17,6 +17,14 @@ The app uses:
 
 Aether Search accepts a user query, retrieves fresh web/news context with Tavily, and synthesizes a cited answer using DeepSeek V4 Flash. The frontend communicates only with the internal API route (`/api/ask`), while provider keys remain server-side.
 
+## Current Product Shape
+
+- Single streamlined search flow (no mode switching).
+- Staged loading UI (`Searching` → `Reading` → `Generating`).
+- Inline citations mapped to rendered source cards.
+- Follow-up question chips for quick iteration.
+- Gradient-based premium UI theme with serif typography.
+
 ## Local Setup
 
 ### Prerequisites
@@ -50,6 +58,13 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
+
+If you see an outdated Next.js overlay/runtime cache issue during development, clear the build cache and restart:
+
+```bash
+rm -rf .next
+npm run dev
+```
 
 ## Environment Variables
 
@@ -103,6 +118,7 @@ Vercel defaults for Next.js are sufficient (build command `npm run build`, outpu
 ## Production Readiness Notes
 
 - `/api/ask` validates input and returns 400 for bad requests.
+- `/api/ask` returns 415 for non-JSON content-type requests.
 - Provider failures return a clean 500 response.
 - Detailed provider error internals are not exposed in production responses.
 
