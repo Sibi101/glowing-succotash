@@ -47,7 +47,7 @@ export function SearchInput({ value, onChange, onSubmit, loading = false }: Sear
             }
           }}
           placeholder="Ask about markets, science, news, software, history..."
-          className="h-11 w-full bg-transparent text-base text-slate-700 placeholder:text-slate-400 focus:outline-none"
+          className="h-11 w-full bg-transparent text-base text-slate-800 placeholder:text-slate-500 focus:outline-none"
           aria-label="Search the web"
         />
 

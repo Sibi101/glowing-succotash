@@ -14,7 +14,7 @@ const examples = [
 export function ExampleQueries({ onPick }: ExampleQueriesProps) {
   return (
     <section className="w-full max-w-3xl">
-      <p className="mb-3 text-xs uppercase tracking-wide text-slate-500">Try an example</p>
+      <p className="mb-3 text-xs uppercase tracking-wide text-white/85">Try an example</p>
       <div className="grid gap-2 sm:grid-cols-2">
         {examples.map((query) => (
           <button

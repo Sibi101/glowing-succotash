@@ -89,16 +89,16 @@ export function SearchShell() {
       <AnimatedBackground />
 
       <div className="relative mx-auto flex w-full max-w-5xl flex-col items-center gap-10 sm:gap-12">
-        <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs text-slate-500 shadow-sm">
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/45 bg-white/80 px-4 py-1.5 text-xs text-slate-700 shadow-sm backdrop-blur-sm">
           <span className="size-1.5 rounded-full bg-sky-500/80" />
           Aether Search
         </div>
 
         <section className="space-y-4 text-center">
-          <h1 className="text-4xl font-semibold tracking-tight text-slate-900 sm:text-6xl">
+          <h1 className="text-4xl font-semibold tracking-tight text-white drop-shadow-[0_2px_18px_rgba(7,24,45,0.35)] sm:text-6xl">
             Ask the internet anything
           </h1>
-          <p className="mx-auto max-w-2xl text-base leading-8 text-slate-600">
+          <p className="mx-auto max-w-2xl text-base leading-8 text-slate-50">
             Real-time AI search with fast synthesis, cited sources, and concise answers that feel like a premium research workflow.
           </p>
         </section>
@@ -139,13 +139,13 @@ export function SearchShell() {
         )}
 
         {phase === "error" && (
-          <section className="w-full max-w-3xl rounded-2xl border border-rose-300/20 bg-rose-500/10 p-5 text-center backdrop-blur-xl sm:p-6">
-            <h2 className="text-base font-medium text-rose-100">We hit a temporary issue.</h2>
-            <p className="mt-2 text-sm text-rose-100/80">{errorMessage || "Please try again in a moment."}</p>
+          <section className="w-full max-w-3xl rounded-2xl border border-rose-200 bg-white/90 p-5 text-center shadow-sm backdrop-blur-sm sm:p-6">
+            <h2 className="text-base font-medium text-rose-700">We hit a temporary issue.</h2>
+            <p className="mt-2 text-sm text-rose-600">{errorMessage || "Please try again in a moment."}</p>
             <button
               type="button"
               onClick={() => void runSearch()}
-              className="mt-4 rounded-lg border border-white/15 bg-white/10 px-4 py-2 text-sm text-zinc-100 transition hover:bg-white/20"
+              className="mt-4 rounded-lg border border-rose-200 bg-white px-4 py-2 text-sm text-rose-700 transition hover:bg-rose-50"
             >
               Retry
             </button>

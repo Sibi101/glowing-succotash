@@ -30,7 +30,7 @@ export function AnswerCard({
       transition={{ duration: 0.35, ease: "easeOut" }}
       className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-7"
     >
-      <p className="text-[15px] leading-8 text-slate-700 sm:text-[17px]">
+      <p className="text-[15px] leading-8 text-slate-800 sm:text-[17px]">
         {segments.map((segment, index) => {
           if (segment.type === "text") {
             return <span key={`text-${index}`}>{segment.value}</span>;
@@ -66,7 +66,7 @@ export function AnswerCard({
               key={question}
               type="button"
               onClick={() => onFollowUpClick?.(question)}
-              className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs text-slate-600 transition hover:border-slate-300 hover:bg-white hover:text-slate-900"
+              className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
             >
               {question}
             </button>
