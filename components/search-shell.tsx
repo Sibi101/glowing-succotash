@@ -23,6 +23,19 @@ function isApiError(value: unknown): value is ApiError {
   return !!value && typeof value === "object" && typeof (value as ApiError).error === "string";
 }
 
+type SearchPhase = "empty" | "loading" | "answer" | "error";
+
+function isAskResponse(value: unknown): value is AskResponse {
+  if (!value || typeof value !== "object") return false;
+
+  const maybe = value as AskResponse;
+  return typeof maybe.answer === "string" && Array.isArray(maybe.followUps) && Array.isArray(maybe.sources);
+}
+
+function isApiError(value: unknown): value is ApiError {
+  return !!value && typeof value === "object" && typeof (value as ApiError).error === "string";
+}
+
 export function SearchShell() {
   const [query, setQuery] = useState("");
   const [phase, setPhase] = useState<SearchPhase>("empty");
