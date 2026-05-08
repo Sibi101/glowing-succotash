@@ -25,10 +25,6 @@ Aether Search accepts a user query, retrieves fresh web/news context with Tavily
 - Follow-up question chips for quick iteration.
 - Gradient-based premium UI theme with serif typography.
 
-## UI Showcase
-![Search Results UI](Screenshot From 2026-05-08 17-52-09.png)
-
-
 ## Local Setup
 
 ### Prerequisites
