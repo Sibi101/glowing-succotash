@@ -1,5 +1,3 @@
-export type SearchMode = "web" | "news" | "research" | "fast";
-
 export interface Source {
   id: number;
   title: string;
@@ -11,7 +9,6 @@ export interface Source {
 
 export interface AskRequest {
   query: string;
-  mode: SearchMode;
 }
 
 export interface AskResponse {

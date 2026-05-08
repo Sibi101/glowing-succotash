@@ -1,7 +1,7 @@
 import "server-only";
 
 import { buildDeepseekUserPrompt, DEEPSEEK_SYSTEM_PROMPT } from "@/lib/prompts";
-import type { SearchMode, Source } from "@/types/search";
+import type { Source } from "@/types/search";
 
 const DEEPSEEK_CHAT_COMPLETIONS_URL = "https://api.deepseek.com/chat/completions";
 
@@ -25,8 +25,7 @@ export interface DeepseekAnswerResult {
 
 export async function generateAnswer(
   query: string,
-  sources: Source[],
-  mode: SearchMode
+  sources: Source[]
 ): Promise<DeepseekAnswerResult> {
   if (!query.trim()) {
     throw new Error("generateAnswer: query is required.");
@@ -41,7 +40,7 @@ export async function generateAnswer(
     throw new Error("generateAnswer: missing DEEPSEEK_API_KEY environment variable.");
   }
 
-  const userPrompt = buildDeepseekUserPrompt(query, sources, mode);
+  const userPrompt = buildDeepseekUserPrompt(query, sources);
 
   let response: Response;
   try {

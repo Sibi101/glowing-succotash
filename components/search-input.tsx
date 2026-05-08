@@ -33,9 +33,9 @@ export function SearchInput({ value, onChange, onSubmit, loading = false }: Sear
   }, []);
 
   return (
-    <div className="relative w-full max-w-3xl rounded-2xl border border-white/15 bg-white/[0.04] p-2 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
-      <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-black/20 px-3 py-2">
-        <Sparkles className="size-4 shrink-0 text-cyan-300" />
+    <div className="relative w-full max-w-3xl rounded-2xl border border-slate-200 bg-white p-2 shadow-sm">
+      <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2">
+        <Sparkles className="size-4 shrink-0 text-sky-600" />
         <input
           ref={inputRef}
           value={value}
@@ -47,11 +47,11 @@ export function SearchInput({ value, onChange, onSubmit, loading = false }: Sear
             }
           }}
           placeholder="Ask about markets, science, news, software, history..."
-          className="h-11 w-full bg-transparent text-base text-zinc-100 placeholder:text-zinc-500 focus:outline-none"
+          className="h-11 w-full bg-transparent text-base text-slate-800 placeholder:text-slate-500 focus:outline-none"
           aria-label="Search the web"
         />
 
-        <kbd className="hidden rounded-md border border-white/15 bg-white/5 px-2 py-1 text-[11px] text-zinc-400 sm:inline-flex">
+        <kbd className="hidden rounded-md border border-slate-300 bg-white px-2 py-1 text-[11px] text-slate-500 sm:inline-flex">
           ⌘/Ctrl + K
         </kbd>
 
@@ -62,8 +62,8 @@ export function SearchInput({ value, onChange, onSubmit, loading = false }: Sear
           className={cn(
             "inline-flex h-10 items-center gap-2 rounded-lg px-4 text-sm font-medium transition",
             loading || !value.trim()
-              ? "cursor-not-allowed bg-white/10 text-zinc-500"
-              : "bg-cyan-400/90 text-slate-900 hover:bg-cyan-300"
+              ? "cursor-not-allowed bg-slate-100 text-slate-400"
+              : "bg-slate-900 text-white hover:bg-slate-700"
           )}
         >
           <CornerDownLeft className="size-4" />
